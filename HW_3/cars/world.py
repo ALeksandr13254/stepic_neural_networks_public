@@ -26,13 +26,13 @@ class World(metaclass=ABCMeta):
 
 
 class SimpleCarWorld(World):
-    COLLISION_PENALTY = 0 * 1e0 # выберите сами
-    HEADING_REWARD = 0 * 1e-1 # выберите сами
-    WRONG_HEADING_PENALTY = 0 * 1e0 # выберите сами
-    IDLENESS_PENALTY = 32 * 1e-1 # выберите сами
-    SPEEDING_PENALTY = 32 * 1e-1 # выберите сами
-    MIN_SPEED = 0.1 * 1e0 # выберите сами
-    MAX_SPEED = 0.7 * 1e0 # выберите сами
+    COLLISION_PENALTY = 32 * 1e0
+    HEADING_REWARD = 0 * 1e-1
+    WRONG_HEADING_PENALTY = 0 * 1e0
+    IDLENESS_PENALTY = 32 * 1e-1
+    SPEEDING_PENALTY = 0 * 1e-1
+    MIN_SPEED = 0.1 * 1e0
+    MAX_SPEED = 10 * 1e0
 
     size = (800, 600)
 
@@ -140,7 +140,7 @@ class SimpleCarWorld(World):
             self.visualize(scale)
             if self._update_display() == pygame.QUIT:
                 break
-            sleep(0.1)
+            #sleep(0.1)
 
         for i, agent in enumerate(self.agents):
             try:
@@ -150,7 +150,7 @@ class SimpleCarWorld(World):
             except AttributeError:
                 pass
 
-    def evaluate_agent(self, agent, steps=1000, visual=True):
+    def evaluate_agent(self, agent, steps=500, visual=True):
         """
         Прогонка цикла мира для конкретного агента (см. пример использования в комментариях после if _name__ == "__main__")
         :param agent: SimpleCarAgent
@@ -177,7 +177,7 @@ class SimpleCarWorld(World):
                 self.visualize(scale)
                 if self._update_display() == pygame.QUIT:
                     break
-                sleep(0.05)
+                #sleep(0.05)
 
         return np.mean(rewards)
 

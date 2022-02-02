@@ -151,7 +151,7 @@ class Network(object):
         activations.append(output)
 
         # обратное распространение
-        delta = self.cost_derivative(activations[-1], y) * self.output_derivative(zs[-1])
+        delta = self.cost_derivative(activations[-1], y) * self.output_derivative(zs[-1]) #- 0.1 * abs(self.weights[-1]) - 0.01 * self.weights[-1]**2
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].T)
 
@@ -164,7 +164,7 @@ class Network(object):
         for l in range(2, self.num_layers):
             z = zs[-l]
             sp = sigmoid_prime(z)
-            delta = np.dot(self.weights[-l + 1].transpose(), delta) * sp
+            delta = np.dot(self.weights[-l + 1].transpose(), delta) * sp #- 0.1*sum(abs(np.squeeze(self.weights[-l]))) - 0.01*sum(np.squeeze(self.weights[-l])**2)
             nabla_b[-l] = delta
             nabla_w[-l] = np.dot(delta, activations[-l - 1].T)
         return nabla_b, nabla_w

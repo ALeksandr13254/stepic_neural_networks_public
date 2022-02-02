@@ -30,9 +30,9 @@ class SimpleCarAgent(Agent):
         :param history_data: количество хранимых нами данных о результатах предыдущих шагов
         """
         self.evaluate_mode = False  # этот агент учится или экзаменутеся? если учится, то False
-        self._rays = 5 # выберите число лучей ладара; например, 5
+        self._rays = 7 # выберите число лучей ладара; например, 5
         # here +2 is for 2 inputs from elements of Action that we are trying to predict
-        self.neural_net = Network([self.rays + 4,
+        self.neural_net = Network([self.rays + 4, 7, 5, 3,
                                    # внутренние слои сети: выберите, сколько и в каком соотношении вам нужно
                                    # например, (self.rays + 4) * 2 или просто число
                                    1],
@@ -130,7 +130,7 @@ class SimpleCarAgent(Agent):
 
         return best_action
 
-    def receive_feedback(self, reward, train_every=50, reward_depth=7):
+    def receive_feedback(self, reward, train_every=100, reward_depth=10):
         """
         Получить реакцию на последнее решение, принятое сетью, и проанализировать его
         :param reward: оценка внешним миром наших действий
@@ -148,7 +148,7 @@ class SimpleCarAgent(Agent):
         i = -1
         while len(self.reward_history) > abs(i) and abs(i) < reward_depth:
             self.reward_history[i] += reward
-            reward *= 0.5
+            reward *= 0.75
             i -= 1
 
         # Если у нас накопилось хоть чуть-чуть данных, давайте потренируем нейросеть
@@ -159,4 +159,4 @@ class SimpleCarAgent(Agent):
             X_train = np.concatenate([self.sensor_data_history, self.chosen_actions_history], axis=1)
             y_train = self.reward_history
             train_data = [(x[:, np.newaxis], y) for x, y in zip(X_train, y_train)]
-            self.neural_net.SGD(training_data=train_data, epochs=15, mini_batch_size=train_every, eta=0.05)
+            self.neural_net.SGD(training_data=train_data, epochs=15, mini_batch_size=20, eta=0.05)
